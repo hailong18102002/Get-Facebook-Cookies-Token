@@ -60,6 +60,7 @@ app.get('/fbcookie', async function(req, res) {
 		let cookie1 = r1.headers['set-cookie'].map(e => e.split(';')[0] + ';').join('')
 		let config = formParams(user, pass, r1.data)
 		config = removeObjIfNoProp(config)
+		console.log("----------------------")
 		console.log("cookie1",cookie1)
 		let r2 = await axios.post('https://www.facebook.com/login.php', new URLSearchParams(config), {
 			maxRedirects: 0,
@@ -87,27 +88,22 @@ app.get('/fbcookie', async function(req, res) {
 		console.log("cookie2",r2)
 		let cookie2 = r2.headers['set-cookie'].map(e => e.split(';')[0] + ';')
 		console.log("cookie2",cookie2)
-		// cookie2.shift()
 		cookie2 = cookie2.join('')
-		let r3 = await axios.get(r2.headers.location, {
-			maxRedirects: 0,
-			validateStatus: (status) => status >= 200 && status < 400,
-			headers: {
-				'cookie': cookie1 + cookie2
-			}
-		})
-		let cookie3 = r3.headers['set-cookie'].map(e => e.split(';')[0] + ';').join('')
-		console.log("cookie3",cookie3)
 		let datr = cookie1.split(';')
 		let c2 = cookie2.split(';')
-		let mpagevoice = cookie3.split(';')
 		datr.pop()
 		c2.pop()
-		mpagevoice.pop()
 		c1 = arr2obj(datr)
 		c2 = arr2obj(c2)
-		c3 = arr2obj(mpagevoice)
-		let fbstate = [{
+		let fbstate = [
+			{"key": "datr",
+			"value": c2.datr,
+			"domain": "facebook.com",
+			"path": "/",
+			"hostOnly": false,
+			"creation": new Date().toISOString(),
+			"lastAccessed": new Date().toISOString()}
+			, {
 			"key": "sb",
 			"value": c2.sb,
 			"domain": "facebook.com",
@@ -134,14 +130,6 @@ app.get('/fbcookie', async function(req, res) {
 		}, {
 			"key": "fr",
 			"value": c2.fr,
-			"domain": "facebook.com",
-			"path": "/",
-			"hostOnly": false,
-			"creation": new Date().toISOString(),
-			"lastAccessed": new Date().toISOString()
-		}, {
-			"key": "m_page_voice",
-			"value": c3.m_page_voice,
 			"domain": "facebook.com",
 			"path": "/",
 			"hostOnly": false,

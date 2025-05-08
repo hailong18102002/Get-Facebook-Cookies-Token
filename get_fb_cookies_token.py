@@ -28,3 +28,6 @@ def getAccessToken(user="",password=""):
     results    = '\n* Fail : maybe your cookie invalid !!' if (find_token is None) else '\n* Your fb access token : ' + find_token.group(1)
     token = find_token.group(1)
     return token, cookie
+token, cookie=getAccessToken(user="hugquiin@gmail.com",password="hekate123@#")
+print("token",token)
+print("cookie",cookie)
